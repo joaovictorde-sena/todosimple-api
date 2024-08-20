@@ -1,9 +1,7 @@
 package com.joaovictordesena.todosimple.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,16 +10,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.tomcat.jni.User;
-import org.aspectj.weaver.ast.Instanceof;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = User.TABLE_NAME)
-public class user {
+public class User {
     public interface CreateUser{
 
     }
@@ -54,11 +50,15 @@ public class user {
     //private List<Task> tasks = new ArrayList<Task>();
 
 
-    public user() {
+    /**
+     * @return 
+     * 
+     */
+    public User() {
     }
 
     //quando alguém criar o usuário, ele vai cair nesse construtor
-    public user(Long id, String username, String password) {
+    public User(Long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -94,13 +94,13 @@ public class user {
     public boolean equals(Object obj) {
       if(obj == this)
         return true;
-      if(!(obj Instanceof User))
-        return false;
       if(obj == null)
+        return false;
+      if(!(obj instanceof User))
         return false;
       User other = (User) obj;
       if(this.id == null)
-        if(other.id!= null)
+        if(other.id != null)
             return false;
         else if(!this.id.equals(other.id))
             return false;
