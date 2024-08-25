@@ -1,15 +1,18 @@
 package com.joaovictordesena.todosimple.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joaovictordesena.todosimple.models.Task;
 import com.joaovictordesena.todosimple.models.User;
 import com.joaovictordesena.todosimple.repositories.TaskRepository;
 
+@Service
 public class TaskService {
 
     @Autowired
@@ -22,6 +25,11 @@ public class TaskService {
         Optional<Task> task = this.taskRepository.findById(id);
         return task.orElseThrow(() -> new RuntimeException(
             " Tarefa não encontrada: id: " + id + ", tipos" + Task.class.getName()));
+    }
+
+    public List<Task> findAllByUserId(Long userId){
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional
