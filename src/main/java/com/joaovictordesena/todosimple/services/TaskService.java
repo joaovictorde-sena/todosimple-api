@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joaovictordesena.todosimple.models.Task;
 import com.joaovictordesena.todosimple.models.User;
 import com.joaovictordesena.todosimple.repositories.TaskRepository;
+import com.joaovictordesena.todosimple.services.exceptions.DataBindingViolationException;
+import com.joaovictordesena.todosimple.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class TaskService {
@@ -23,7 +24,7 @@ public class TaskService {
 
     public Task findById(Long id){
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
+        return task.orElseThrow(() -> new ObjectNotFoundException(
             " Tarefa não encontrada: id: " + id + ", tipos" + Task.class.getName()));
     }
 
@@ -54,7 +55,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);;
         } catch (Exception e) {
-           throw new RuntimeException("Não é possível excluir pois há entidades relacionadas!");
+           throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
         }
     }
 }
