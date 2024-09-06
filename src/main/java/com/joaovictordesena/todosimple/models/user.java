@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.fasterxml.jackson.core.JsonEncoding;
 import com.joaovictordesena.todosimple.models.enums.ProfileEnum;
 
 import lombok.AllArgsConstructor;
