@@ -2,11 +2,13 @@ package com.joaovictordesena.todosimple.services;
 
 
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import com.joaovictordesena.todosimple.models.User;
 import com.joaovictordesena.todosimple.models.enums.ProfileEnum;
 import com.joaovictordesena.todosimple.repositories.TaskRepository;
 import com.joaovictordesena.todosimple.repositories.UserRepository;
+import com.joaovictordesena.todosimple.security.UserSpringSecurity;
+import com.joaovictordesena.todosimple.services.exceptions.AuthorizationException;
 import com.joaovictordesena.todosimple.services.exceptions.DataBindingViolationException;
 import com.joaovictordesena.todosimple.services.exceptions.ObjectNotFoundException;
 
@@ -29,10 +33,16 @@ public class UserService {
     private TaskRepository taskRepository;
 
     public User findById(Long id){
+        UserSpringSecurity userSpringSecurity = authenticated();
+        if(!Objects.nonNull(userSpringSecurity)
+            || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !id.equals(userSpringSecurity.getId()))
+            throw new AuthorizationException("Acesso negado!");
+
         Optional<User> user = this.userRepository.findById(id);
         return user.orElseThrow(() -> new ObjectNotFoundException(
          "Usuário não encontrado:" + id + ", tipo: " + User.class.getName()));
     }
+
 
     @Transactional
     public User create(User obj){
@@ -62,6 +72,12 @@ public class UserService {
         }
     }
 
-
+    private static UserSpringSecurity authenticated(){
+        try {
+            return(UserSpringSecurity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }
