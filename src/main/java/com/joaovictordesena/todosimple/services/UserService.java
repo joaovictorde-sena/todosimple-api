@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaovictordesena.todosimple.models.User;
+import com.joaovictordesena.todosimple.models.dto.UserCreateDTO;
+import com.joaovictordesena.todosimple.models.dto.UserUpdateDTO;
 import com.joaovictordesena.todosimple.models.enums.ProfileEnum;
 import com.joaovictordesena.todosimple.repositories.TaskRepository;
 import com.joaovictordesena.todosimple.repositories.UserRepository;
@@ -78,6 +82,20 @@ public class UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj){
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+        }
+
+    public User fromDTO(@Valid UserUpdateDTO obj){
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 
 }
